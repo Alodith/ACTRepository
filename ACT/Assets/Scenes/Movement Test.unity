@@ -253,10 +253,6 @@ PrefabInstance:
       value: Player New
       objectReference: {fileID: 0}
     - target: {fileID: 1441957295241756011, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1441957295241756011, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1998068359
       objectReference: {fileID: 0}
@@ -299,22 +295,6 @@ PrefabInstance:
     - target: {fileID: 1457290135603640121, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3400876021225921318, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
-      propertyPath: near clip plane
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4138798717611461812, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5145200473733984593, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6013555129036469771, guid: d4156ca9135121542aa8ee47ff8693a6, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

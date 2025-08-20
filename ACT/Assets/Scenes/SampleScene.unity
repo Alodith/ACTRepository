@@ -1254,6 +1254,7 @@ MonoBehaviour:
   joinCodeText: {fileID: 587470042}
   joinCodeInputField: {fileID: 1539070952}
   thingsToDisable: {fileID: 542043972}
+  panelImage: {fileID: 1995570243}
 --- !u!4 &881135001
 Transform:
   m_ObjectHideFlags: 0

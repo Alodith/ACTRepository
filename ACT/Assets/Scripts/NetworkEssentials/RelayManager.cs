@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Relay.Models;
@@ -15,7 +16,7 @@ public class RelayManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI joinCodeText;
     [SerializeField] private TMP_InputField joinCodeInputField;
     [SerializeField] private GameObject thingsToDisable;
-
+    [SerializeField] private Image panelImage;
     private async void Start()
     {
         await UnityServices.InitializeAsync();
@@ -28,12 +29,14 @@ public class RelayManager : MonoBehaviour
         string joinCode = await StartHostWithRelay();
         joinCodeText.text = joinCode;
         thingsToDisable.SetActive(false);
+        panelImage.enabled =false;
     }
 
     public async void JoinRelay()
     {
         await StartClientWithRelay(joinCodeInputField.text);
         thingsToDisable.SetActive(false);
+        panelImage.enabled = false;
     }
 
 
