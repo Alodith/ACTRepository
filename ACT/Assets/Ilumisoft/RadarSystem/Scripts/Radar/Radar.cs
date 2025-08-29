@@ -111,7 +111,7 @@ namespace Ilumisoft.RadarSystem
             if (pingSize >= 100f)
             {
                 StartCoroutine(PingWait());
-                print("Wait Performed");
+                //print("Wait Performed");
                 
             }
             else
@@ -139,11 +139,11 @@ namespace Ilumisoft.RadarSystem
                         {
                             float localX = (iconLocation.x - Player.transform.position.x) * (iconLocation.x - Player.transform.position.x);
                             float localY = (iconLocation.y - Player.transform.position.z) * (iconLocation.y - Player.transform.position.z);
-                            print((localX + localY) + ("               ") + (pingSize * pingSize));
+                           // print((localX + localY) + ("               ") + (pingSize * pingSize));
                             //print((iconLocation.x - Player.transform.position.x) * (iconLocation.x - Player.transform.position.x) + (iconLocation.y - Player.transform.position.y) * (iconLocation.y - Player.transform.position.y));
                             if (localX + localY  < (pingSize * pingSize))
                             {
-                                print("TEST");
+                                //print("TEST");
                                 locatable.IsPinged = true;
                                 //locatable.GetComponent<Animation>().Play("Ping");
                                 //locatable.GetComponent<Locatable>().playAnim();

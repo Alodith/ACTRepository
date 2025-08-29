@@ -1,0 +1,7 @@
+<linker>
+  <assembly fullname="Unity.Services.Vivox">
+    <namespace fullname="Unity.Services.Vivox" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Services.Core" preserve="all" />
+</linker>
+
