@@ -22,41 +22,45 @@ public class RelayManager : MonoBehaviour
 
     private async void Start()
     {
-        var initOptions = new InitializationOptions();
-        // Provide Vivox credentials explicitly for builds
-        initOptions.SetVivoxCredentials(
-            "https://unity.vivox.com/appconfig/57726-act-17813-udash",
-            "mtu1xp.vivox.com",
-            "57726-act-17813-udash",
-            "wuREwf1PpfmNExv2ONounBOGugT0ekQX");
-        await UnityServices.InitializeAsync(initOptions);
-
-        // Ensure a unique UGS player identity per process (prevents Vivox 5100 disconnects)
         try
         {
-            string uniqueProfile = $"p_{System.DateTime.UtcNow.Ticks % 100000}_{System.Diagnostics.Process.GetCurrentProcess().Id}";
-            AuthenticationService.Instance.SwitchProfile(uniqueProfile);
+            // Initialize Unity Services with Vivox credentials
+            // SetVivoxCredentials parameter order: (serverUrl, domain, issuer, key)
+            var options = new InitializationOptions();
+            options.SetVivoxCredentials(
+                "https://unity.vivox.com/appconfig/57726-act-17813-udash",  // Server URL (first parameter)
+                "mtu1xp.vivox.com",           // Domain (second parameter)
+                "57726-act-17813-udash",      // Token Issuer (third parameter)
+                ""                            // Token Key (fourth parameter, empty in your config)
+            );
+            await UnityServices.InitializeAsync(options);
+            Debug.Log("Unity Services initialized with Vivox credentials");
+            
+            // Then sign in for Relay
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            
+            // Finally initialize Vivox
+            if (VivoxService.Instance != null)
+            {
+                try
+                {
+                    await VivoxService.Instance.InitializeAsync();
+                    Debug.Log("Vivox initialized successfully");
+                }
+                catch (System.Exception vivoxEx)
+                {
+                    Debug.LogError($"Vivox initialization failed: {vivoxEx.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("VivoxService.Instance is null during Start; voice will be unavailable in this session.");
+            }
         }
-        catch { }
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        if (VivoxService.Instance != null)
+        catch (System.Exception ex)
         {
-            await VivoxService.Instance.InitializeAsync();
+            Debug.LogError($"Initialization error: {ex.Message}");
         }
-        else
-        {
-            Debug.LogWarning("VivoxService.Instance is null during Start; voice will be unavailable in this session.");
-        }
-        
-
-        
-        
-        
-        //await VivoxService.Instance.JoinEchoChannelAsync("ChannelName", ChatCapability.AudioOnly);
-
-
-
-       // LoginToVivoxAsync();
     }
 
     public async void LoginToVivoxAsync()
@@ -65,13 +69,6 @@ public class RelayManager : MonoBehaviour
        // options.DisplayName = "Player";
         //options.EnableTTS = true;
         await VivoxService.Instance.LoginAsync();
-        //JoinChannelAsync();
-    }
-
-    public async void JoinChannelAsync()
-    {
-        string channelToJoin = "Lobby";
-        await VivoxService.Instance.JoinGroupChannelAsync(channelToJoin, ChatCapability.TextAndAudio);
     }
 
     public async void StartRelay()
@@ -115,9 +112,12 @@ public class RelayManager : MonoBehaviour
                 string hostName = $"host-{System.DateTime.UtcNow.Ticks % 10000}";
                 await VivoxService.Instance.LoginAsync(new LoginOptions { DisplayName = hostName });
                 await WaitForVivoxLoginAsync();
-                string channelToJoin = "Lobby";
-                await VivoxService.Instance.JoinGroupChannelAsync(channelToJoin, ChatCapability.AudioOnly);
-                Debug.Log($"Vivox host logged in: {VivoxService.Instance.IsLoggedIn}, joined channel: {channelToJoin}");
+                string channelToJoin = "World";
+                // Use positional channel for proximity audio
+                var channel3DProperties = new Channel3DProperties(50, 5, 50, AudioFadeModel.InverseByDistance);
+                var channelOptions = new ChannelOptions();
+                await VivoxService.Instance.JoinPositionalChannelAsync(channelToJoin, ChatCapability.AudioOnly, channel3DProperties, channelOptions);
+                Debug.Log($"Vivox host logged in: {VivoxService.Instance.IsLoggedIn}, joined positional channel: {channelToJoin}");
             }
             catch (System.Exception ex)
             {
@@ -147,11 +147,6 @@ public class RelayManager : MonoBehaviour
         JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
         NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
 
-        if (string.IsNullOrEmpty(joinCode))
-        {
-            return false;
-        }
-
         bool started = NetworkManager.Singleton.StartClient();
         if (!started)
         {
@@ -166,9 +161,12 @@ public class RelayManager : MonoBehaviour
                 string clientName = $"client-{System.DateTime.UtcNow.Ticks % 10000}";
                 await VivoxService.Instance.LoginAsync(new LoginOptions { DisplayName = clientName });
                 await WaitForVivoxLoginAsync();
-                string channelToJoin = "Lobby";
-                await VivoxService.Instance.JoinGroupChannelAsync(channelToJoin, ChatCapability.AudioOnly);
-                Debug.Log($"Vivox client logged in: {VivoxService.Instance.IsLoggedIn}, joined channel: {channelToJoin}");
+                string channelToJoin = "World";
+                // Join the same positional channel as the host
+                var channel3DProperties = new Channel3DProperties(50, 5, 50, AudioFadeModel.InverseByDistance);
+                var channelOptions = new ChannelOptions();
+                await VivoxService.Instance.JoinPositionalChannelAsync(channelToJoin, ChatCapability.AudioOnly, channel3DProperties, channelOptions);
+                Debug.Log($"Vivox client logged in: {VivoxService.Instance.IsLoggedIn}, joined positional channel: {channelToJoin}");
             }
             catch (System.Exception ex)
             {

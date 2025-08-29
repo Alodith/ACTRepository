@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 5145200473733984593}
   - component: {fileID: 5963307197192279967}
   - component: {fileID: 6568335795974546377}
+  - component: {fileID: -8243700465735528300}
   m_Layer: 0
   m_Name: Player New
   m_TagString: Player
@@ -273,6 +274,19 @@ MonoBehaviour:
   rotation: Rotation
   jump: Jump
   sprint: Sprint
+--- !u!114 &-8243700465735528300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942599084612872669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2925de1eb0f22418c9f02b93491b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channelName: World
 --- !u!1 &2743985552588055518
 GameObject:
   m_ObjectHideFlags: 0
